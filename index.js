@@ -4,6 +4,9 @@ const client = new Discord.Client();
 const fs = require('fs');
 const dotenv = require('dotenv').config();
 
+const alreadyRecorded = require('./util/alreadyRecorded');
+const checkRole = require('./util/checkRole');
+
 //======== DISCORD STUFF =========
 client.on('ready', () => {
     console.log(`${client.user.tag} is logged in!`)
@@ -78,20 +81,3 @@ client.on('message', message => {
 });
 
 client.login(process.env.BOT_TOKEN);
-
-
-//============= UTIL FUNCTIONS ===============
-function alreadyRecorded(name){
-    try{
-        const data = fs.readFileSync('./log.txt', 'utf8');
-        var tof = data.includes(name);
-        return tof;
-    }
-    catch(err){
-        console.log(err);
-    }
-}
-
-function checkRole(m){
-    return m.member.roles.cache.some(role => role.name === 'king');
-}
