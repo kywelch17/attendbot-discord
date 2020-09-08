@@ -4,6 +4,7 @@ const client = new Discord.Client();
 const fs = require('fs');
 const dotenv = require('dotenv').config();
 
+//Util functions
 const alreadyRecorded = require('./util/alreadyRecorded');
 const checkRole = require('./util/checkRole');
 
@@ -16,11 +17,16 @@ client.on('message', message => {
     if(message.author.bot){
         return;
     }
-    
+
+    const username = message.member.user.username;
+    const nickname = message.member.nickname;
+    var tof = false;
+    var nickn = false;
+
     //The real commands
     switch(message.content){
         case '!here':
-            if(message.member.nickname === null && fs.existsSync('./log.txt')){
+            if(message.member.nickname === null){
                 if(alreadyRecorded(message.member.user.username) === true){
                     message.channel.send('You already recorded your attendance');
                 }
@@ -32,7 +38,7 @@ client.on('message', message => {
                         });
                 }
             }
-            else if(message.member.nickname !== null && fs.existsSync('./log.txt')){
+            else{
                 if(alreadyRecorded(message.member.nickname) === true){
                     message.channel.send('You already recorded your attendance');
                 }
@@ -81,7 +87,7 @@ client.on('message', message => {
             message.channel.send('`!here` - To register your attendance, call this command and you will be logged as present.\n'
                 + '`!export` - This will output all the put who logged in as present.\n'
                 + '`!clear` - This clears the logs, you start a new one with whoever first says `!here`.');
-                break;
+            break;
     }
 });
 
