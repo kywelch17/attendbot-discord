@@ -20,33 +20,34 @@ client.on('message', message => {
 
     const username = message.member.user.username;
     const nickname = message.member.nickname;
-    var tof = false;
-    var nickn = false;
 
     //The real commands
     switch(message.content){
         case '!here':
-            if(message.member.nickname === null){
-                if(alreadyRecorded(message.member.user.username) === true){
-                    message.channel.send('You already recorded your attendance');
-                }
-                else{
-                    fs.appendFile('./log.txt', message.member.user.username + '\r\n', 'utf8', 
-                        function(err){
-                            if(err) throw err;
-                            message.channel.send(`${message.member.user.username}, you're recorded.`);
-                        });
-                }
+            if(alreadyRecorded(username) === true || alreadyRecorded(nickname) === true){
+                message.channel.send('You are already recorded');
+                break;
             }
             else{
-                if(alreadyRecorded(message.member.nickname) === true){
-                    message.channel.send('You already recorded your attendance');
+                fs.exists('./log.txt', 
+                    function(exists){
+                        if(!exists){
+                            fs.open('./log.txt', 'a', 
+                                function(err, f){
+                                    console.log('SAVED');
+                                });
+                        }
+                    });
+                if(nickname === null){
+                    fs.appendFile('./log.txt', username + '\r\n', 'utf8', 
+                        function(err){
+                            message.channel.send(`${username}, thank you for attending!`);
+                        });
                 }
                 else{
-                    fs.appendFile('./log.txt', message.member.nickname + '\r\n', 'utf8', 
+                    fs.appendFile('./log.txt', nickname + '\r\n', 'utf8', 
                         function(err){
-                            if(err) throw err;
-                            message.channel.send(`${message.member.nickname}, you're recorded.`);
+                            message.channel.send(`${nickname}, thank you for attending!`);
                         });
                 }
             }
