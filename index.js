@@ -26,7 +26,6 @@ client.on('message', message => {
         case '!here':
             if(alreadyRecorded(username) === true || alreadyRecorded(nickname) === true){
                 message.channel.send('You are already recorded');
-                break;
             }
             else{
                 fs.exists('./log.txt', 
